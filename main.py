@@ -4,14 +4,14 @@ import asyncio
 import traceback
 from bot import *
 from controllers.controller import *
-from controllers.test_controller import *
+from controllers.minecraft_controller import *
 
 __CREDS_FILENAME = os.path.join(os.getcwd(), "auth.json")
 
 
 MAIN_MENU = """
 0) Exit
-1) Test
+1) Minecraft
 
 >>"""
 
@@ -20,7 +20,7 @@ MENU_CHOICES = (0, 1)
 
 async def get_controller(c: int) -> GameControllerType | None:
     if c == 1:
-        return TestController()
+        return MinecraftController()
     return None
 
 
