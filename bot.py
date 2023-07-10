@@ -18,10 +18,7 @@ class GameBotController:
         print("Bot ready!")
 
     async def __on_message(self, msg: ChatMessage):
-        print("Waiting 5 seconds to test...")
-        await asyncio.sleep(5)
-
-        text = msg.text.lstrip().rstrip()
+        text = msg.text.lower().lstrip().rstrip()
         if text in self.controller.controls:
             b = await self.controller.is_window_in_focus()
             if b:

@@ -7,104 +7,112 @@ class MinecraftController(GameController):
         super().__init__(process_name=process_name, window_title=window_title)
 
     @GameController.register
-    async def leftclick(self):
+    async def stop(self):
+        await self.left_click_up()
+        await self.right_click_up()
+        await self.shift_up()
+        await self.ctrl_up()
+
+    @GameController.register
+    async def lclick(self):
         await self.left_click()
 
     @GameController.register
-    async def rightclick(self):
+    async def rclick(self):
         await self.right_click()
 
     @GameController.register
-    async def forward(self):
+    async def lpress(self):
+        await self.left_click_down()
+
+    @GameController.register
+    async def rpress(self):
+        await self.right_click_down()
+
+    @GameController.register
+    async def w(self):
         await self.key_down("w")
         await asyncio.sleep(0.5)
         await self.key_up("w")
 
     @GameController.register
-    async def back(self):
+    async def s(self):
         await self.key_down("s")
         await asyncio.sleep(0.5)
         await self.key_up("s")
 
     @GameController.register
-    async def left(self):
+    async def a(self):
         await self.key_down("a")
         await asyncio.sleep(0.5)
         await self.key_up("a")
 
     @GameController.register
-    async def right(self):
+    async def d(self):
         await self.key_down("d")
         await asyncio.sleep(0.5)
         await self.key_up("d")
 
     @GameController.register
-    async def inventory(self):
+    async def e(self):
         await self.key_down("e")
         await self.key_up("e")
 
     @GameController.register
-    async def drop(self):
+    async def q(self):
         await self.key_down("q")
         await self.key_up("q")
 
     @GameController.register
     async def jump(self):
         await self.space_down()
-        await asyncio.sleep(0.5)
         await self.space_up()
 
     @GameController.register
-    async def docrouch(self):
+    async def ctrl(self):
         await self.ctrl_down()
+        await self.ctrl_up()
 
     @GameController.register
-    async def undocrouch(self):
-        await self.ctrl_down()
-
-    @GameController.register
-    async def doshift(self):
+    async def shift(self):
         await self.shift_down()
-
-    @GameController.register
-    async def undoshift(self):
         await self.shift_up()
 
     @GameController.register
-    async def lookupless(self):
-        await self.move_mouse(0,-30)
+    async def upless(self):
+        await self.move_mouse(0,-50)
 
     @GameController.register
-    async def lookdownless(self):
-        await self.move_mouse(0, 30)
+    async def downless(self):
+        await self.move_mouse(0, 50)
 
     @GameController.register
-    async def lookleftless(self):
-        await self.move_mouse(-30,0)
+    async def leftless(self):
+        await self.move_mouse(-50,0)
 
     @GameController.register
-    async def lookrightless(self):
-        await self.move_mouse(30, 0)
+    async def rightless(self):
+        await self.move_mouse(50, 0)
 
     @GameController.register
-    async def lookup(self):
-        await self.move_mouse(0,-75)
+    async def up(self):
+        await self.move_mouse(0,-100)
 
     @GameController.register
-    async def lookdown(self):
-        await self.move_mouse(0, 75)
+    async def down(self):
+        await self.move_mouse(0, 100)
 
     @GameController.register
-    async def lookleft(self):
-        await self.move_mouse(-75,0)
+    async def left(self):
+        await self.move_mouse(-100,0)
 
     @GameController.register
-    async def lookright(self):
-        await self.move_mouse(75, 0)
+    async def right(self):
+        await self.move_mouse(100, 0)
 
     @GameController.register
     async def turn(self):
-        await self.move_mouse(150, 0)
+        await self.move_mouse(180, 0)
 
     @GameController.register
     async def slot1(self):

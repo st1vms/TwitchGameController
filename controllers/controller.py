@@ -36,10 +36,24 @@ class GameController:
         pyautogui.moveTo( mouse_pos.x+xoff,  mouse_pos.y+yoff, duration=0.5)
 
     async def left_click(self):
-        pyautogui.click(button='left')
+        pyautogui.mouseDown(button='left')
+        pyautogui.mouseUp(button='left')
 
     async def right_click(self):
-        pyautogui.click(button='right')
+        pyautogui.mouseDown(button='right')
+        pyautogui.mouseUp(button='right')
+
+    async def left_click_down(self):
+        pyautogui.mouseDown(button='left')
+
+    async def left_click_up(self):
+        pyautogui.mouseUp(button='left')
+
+    async def right_click_down(self):
+        pyautogui.mouseDown(button='right')
+
+    async def right_click_up(self):
+        pyautogui.mouseUp(button='right')
 
     async def space_down(self):
         await self.key_down("space")
