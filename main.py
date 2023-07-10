@@ -3,10 +3,25 @@ import json
 import asyncio
 import traceback
 from bot import *
+from controllers.controller import *
+from controllers.test_controller import *
 
-__AUTH_FILENAME = "auth.json"
+__CREDS_FILENAME = os.path.join(os.getcwd(), "auth.json")
 
-__CREDS_FILENAME = os.path.join(os.getcwd(), __AUTH_FILENAME)
+
+MAIN_MENU = """
+0) Exit
+1) Test
+
+>>"""
+
+MENU_CHOICES = (0, 1)
+
+
+async def get_controller(c: int) -> GameControllerType | None:
+    if c == 1:
+        return TestController()
+    return None
 
 
 def __ask_creds() -> dict | None:
@@ -40,7 +55,26 @@ async def __main() -> None:
         if not creds:
             raise ValueError("Invalid credentials")
 
-        bot = GameBotController(creds)
+        c = 0
+        while True:
+            try:
+                c = int(input(MAIN_MENU).lstrip().rstrip())
+                if c not in MENU_CHOICES:
+                    print("\nInvalid choice...")
+                    continue
+
+                if c == 0:
+                    print("Quitting...")
+                    return
+
+                break
+            except KeyboardInterrupt:
+                break
+            except:
+                print("\nInvalid choice...")
+
+        controller = await get_controller(c)
+        bot = GameBotController(creds, controller=controller)
         await bot.init_bot()
     except:
         traceback.print_exc()
