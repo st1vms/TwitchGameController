@@ -1,160 +1,117 @@
 from .controller import *
-import asyncio
 
 class MinecraftController(GameController):
 
-    def __init__(self, process_name:str=None, window_title:str="Minecraft 1.20.1 - Singleplayer") -> None:
-        super().__init__(process_name=process_name, window_title=window_title)
+    def __init__(self, class_name:str='[CLASS:GLFW30]', window_control:str="") -> None:
+        super().__init__(class_name=class_name, window_control=window_control)
 
-    @GameController.register
-    async def stop(self):
-        await self.left_click_up()
-        await self.right_click_up()
-        await self.shift_up()
-        await self.ctrl_up()
-
-    @GameController.register
-    async def lclick(self):
+    async def mouse1click(self):
         await self.left_click()
 
-    @GameController.register
-    async def rclick(self):
+    async def mouse2click(self):
         await self.right_click()
 
-    @GameController.register
-    async def lpress(self):
+    async def mouse1down(self):
         await self.left_click_down()
 
-    @GameController.register
-    async def rpress(self):
+    async def mouse1up(self):
+        await self.left_click_up()
+
+    async def mouse2down(self):
         await self.right_click_down()
 
-    @GameController.register
+    async def mouse2up(self):
+        await self.right_click_up()
+
     async def w(self):
-        await self.key_down("w")
-        await asyncio.sleep(0.5)
-        await self.key_up("w")
+        await self.key_press("w")
 
-    @GameController.register
     async def s(self):
-        await self.key_down("s")
-        await asyncio.sleep(0.5)
-        await self.key_up("s")
+        await self.key_press("s", duration=0.2)
 
-    @GameController.register
     async def a(self):
-        await self.key_down("a")
-        await asyncio.sleep(0.5)
-        await self.key_up("a")
+        await self.key_press("a", duration=0.2)
 
-    @GameController.register
     async def d(self):
-        await self.key_down("d")
-        await asyncio.sleep(0.5)
-        await self.key_up("d")
+        await self.key_press("d", duration=0.2)
 
-    @GameController.register
     async def e(self):
-        await self.key_down("e")
-        await self.key_up("e")
+        await self.key_send("e")
 
-    @GameController.register
     async def q(self):
-        await self.key_down("q")
-        await self.key_up("q")
+        await self.key_send("q")
 
-    @GameController.register
+    async def esc(self):
+        await self.esc_press()
+
     async def jump(self):
-        await self.space_down()
-        await self.space_up()
+        await self.space_press()
 
-    @GameController.register
     async def ctrl(self):
-        await self.ctrl_down()
-        await self.ctrl_up()
+        await self.ctrl_press()
 
-    @GameController.register
     async def shift(self):
-        await self.shift_down()
-        await self.shift_up()
+        await self.shift_press()
 
-    @GameController.register
+    async def slot1(self):
+        await self.key_send("1")
+
+    async def slot2(self):
+        await self.key_send("2")
+
+    async def slot3(self):
+        await self.key_send("3")
+
+    async def slot4(self):
+        await self.key_send("4")
+
+    async def slot5(self):
+        await self.key_send("5")
+
+    async def slot6(self):
+        await self.key_send("6")
+
+    async def slot7(self):
+        await self.key_send("7")
+
+    async def slot8(self):
+        await self.key_send("8")
+
+    async def slot9(self):
+        await self.key_send("9")
+
     async def upless(self):
+        await self.left_click()
         await self.move_mouse(0,-50)
 
-    @GameController.register
     async def downless(self):
+        await self.left_click()
         await self.move_mouse(0, 50)
 
-    @GameController.register
     async def leftless(self):
+        await self.left_click()
         await self.move_mouse(-50,0)
 
-    @GameController.register
     async def rightless(self):
+        await self.left_click()
         await self.move_mouse(50, 0)
 
-    @GameController.register
     async def up(self):
+        await self.left_click()
         await self.move_mouse(0,-100)
 
-    @GameController.register
     async def down(self):
+        await self.left_click()
         await self.move_mouse(0, 100)
 
-    @GameController.register
     async def left(self):
+        await self.left_click()
         await self.move_mouse(-100,0)
 
-    @GameController.register
     async def right(self):
+        await self.left_click()
         await self.move_mouse(100, 0)
 
-    @GameController.register
     async def turn(self):
+        await self.left_click()
         await self.move_mouse(180, 0)
-
-    @GameController.register
-    async def slot1(self):
-        await self.key_down("1")
-        await self.key_up("1")
-
-    @GameController.register
-    async def slot2(self):
-        await self.key_down("2")
-        await self.key_up("2")
-
-    @GameController.register
-    async def slot3(self):
-        await self.key_down("3")
-        await self.key_up("3")
-
-    @GameController.register
-    async def slot4(self):
-        await self.key_down("4")
-        await self.key_up("4")
-
-    @GameController.register
-    async def slot5(self):
-        await self.key_down("5")
-        await self.key_up("5")
-
-    @GameController.register
-    async def slot6(self):
-        await self.key_down("6")
-        await self.key_up("6")
-
-    @GameController.register
-    async def slot7(self):
-        await self.key_down("7")
-        await self.key_up("7")
-
-    @GameController.register
-    async def slot8(self):
-        await self.key_down("8")
-        await self.key_up("8")
-
-    @GameController.register
-    async def slot9(self):
-        await self.key_down("9")
-        await self.key_up("9")

@@ -5,6 +5,7 @@ import traceback
 from bot import *
 from controllers.controller import *
 from controllers.minecraft_controller import *
+from controllers.gba_poke_controller import *
 
 __CREDS_FILENAME = os.path.join(os.getcwd(), "auth.json")
 
@@ -12,15 +13,17 @@ __CREDS_FILENAME = os.path.join(os.getcwd(), "auth.json")
 MAIN_MENU = """
 0) Exit
 1) Minecraft
-
+2) GBA Pokemon
 >>"""
 
-MENU_CHOICES = (0, 1)
+MENU_CHOICES = (0, 1, 2)
 
 
 async def get_controller(c: int) -> GameControllerType | None:
     if c == 1:
         return MinecraftController()
+    elif c == 2:
+        return GBAPokeController()
     return None
 
 

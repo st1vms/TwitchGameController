@@ -20,9 +20,7 @@ class GameBotController:
     async def __on_message(self, msg: ChatMessage):
         text = msg.text.lower().lstrip().rstrip()
         if text in self.controller.controls:
-            b = await self.controller.is_window_in_focus()
-            if b:
-                await self.controller.controls[text](self.controller)
+            await self.controller.controls[text]()
 
     async def __register_events(self):
         self.chat.register_event(ChatEvent.READY, self.__on_ready)

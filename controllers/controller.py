@@ -1,6 +1,7 @@
 from typing import Callable, TypeVar
-import pyautogui
-import win32gui
+import autoit
+import time
+
 
 GameControllerType = TypeVar("GameControllerType", bound="GameController")
 
@@ -8,85 +9,76 @@ GameControllerType = TypeVar("GameControllerType", bound="GameController")
 class GameController:
     controls: dict[str, Callable[..., None]] = {}
 
-    def __init__(self, process_name:str=None, window_title:str=None):
-        self._hwnd = win32gui.FindWindow(process_name, window_title)
-        if self._hwnd == 0:
-            raise ValueError(f"Invalid window title: {window_title}")
+    def __init__(self, class_name:str="", window_control:str=""):
+        self.window_control = window_control
+        self.class_name = class_name
 
-    @classmethod
-    def register(cls, func: Callable[..., None]) -> Callable[..., None]:
-        if not hasattr(cls, "controls"):
-            cls.controls = {}
-        if func.__name__ not in cls.controls:
-            cls.controls[func.__name__] = func
-        return func
+    def register(self, *funcs: Callable[..., None]) :
+        if not hasattr(self, "controls"):
+            self.controls = {}
 
-    async def is_window_in_focus(self) -> bool:
-        w = win32gui.GetForegroundWindow()
-        return self._hwnd == w
+        for func in funcs:
+            if func.__name__ not in self.controls:
+                self.controls[func.__name__] = func
 
-    async def key_down(self, key:str):
-        pyautogui.keyDown(key)
+    async def get_window_center(self) -> tuple[float, float]:
+        x1,y1,x2,y2 = autoit.win_get_pos(self.class_name)
+        center_x = x1 + ((x2 - x1) // 2)
+        center_y = y1 + ((y2 - y1) // 2)
+        return (center_x, center_y)
 
-    async def key_up(self, key:str):
-        pyautogui.keyUp(key)
+    async def key_press(self, key, duration:float=0.1):
+        t = time.time() + (duration)
+        while time.time() <= t:
+            autoit.control_send(self.class_name, self.window_control, key, down=True)
+        autoit.control_send(self.class_name, self.window_control, key, up=True)
 
-    async def move_mouse(self, xoff:float, yoff:float):
-        mouse_pos = pyautogui.position()
-        pyautogui.moveTo( mouse_pos.x+xoff,  mouse_pos.y+yoff, duration=0.5)
+    async def key_send(self, key):
+        autoit.control_send(self.class_name, self.window_control, key)
 
-    async def left_click(self):
-        pyautogui.mouseDown(button='left')
-        pyautogui.mouseUp(button='left')
+    async def space_press(self, duration:float=0.1):
+        await self.key_send('{SPACE}')
 
-    async def right_click(self):
-        pyautogui.mouseDown(button='right')
-        pyautogui.mouseUp(button='right')
+    async def enter_press(self, duration:float=0.1):
+        await self.key_send('{ENTER}')
+
+    async def ctrl_press(self, duration:float=0.1):
+        await self.key_send('{CTRL}')
+
+    async def shift_press(self, duration:float=0.1):
+        await self.key_send('{SHIFT}')
+
+    async def tab_press(self, duration:float=0.1):
+        await self.key_send('{TAB}')
+
+    async def esc_press(self, duration:float=0.1):
+        await self.key_send('{ESC}')
+
+    async def move_mouse(self, xoff:float=0.0, yoff:float=0.0):
+        x,y = await self.get_window_center()
+        autoit.mouse_move(x, y, 0)
+        if xoff != 0 or yoff != 0:
+            print(f"moving to {x} {y}")
+            autoit.mouse_move(x+xoff, y+yoff, 25)
+
+    async def left_click(self, x:float=-1, y:float=-1):
+        if x == -1 or y == -1:
+            x,y = await self.get_window_center()
+        autoit.mouse_click("left", x, y, 1, 0)
+
+    async def right_click(self, x:float=-1, y:float=-1):
+        if x == -1 or y == -1:
+            x,y = await self.get_window_center()
+        autoit.mouse_click("right", x, y, 1, 0)
 
     async def left_click_down(self):
-        pyautogui.mouseDown(button='left')
+        autoit.mouse_down("left")
 
     async def left_click_up(self):
-        pyautogui.mouseUp(button='left')
+        autoit.mouse_up("left")
 
     async def right_click_down(self):
-        pyautogui.mouseDown(button='right')
+        autoit.mouse_down("right")
 
     async def right_click_up(self):
-        pyautogui.mouseUp(button='right')
-
-    async def space_down(self):
-        await self.key_down("space")
-
-    async def space_up(self):
-        await self.key_up("space")
-
-    async def enter_down(self):
-        await self.key_down("enter")
-
-    async def enter_up(self):
-        await self.key_up("enter")
-
-    async def ctrl_down(self):
-        await self.key_down("ctrl")
-
-    async def ctrl_up(self):
-        await self.key_up("ctrl")
-
-    async def shift_down(self):
-        await self.key_down("shift")
-
-    async def shift_up(self):
-        await self.key_up("shift")
-
-    async def tab_down(self):
-        await self.key_down("tab")
-
-    async def tab_up(self):
-        await self.key_up("tab")
-
-    async def alt_down(self):
-        await self.key_down("alt")
-
-    async def alt_up(self):
-        await self.key_up("alt")
+        autoit.mouse_up("right")
