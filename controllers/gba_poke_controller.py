@@ -22,31 +22,31 @@ class GBAPokeController(GameController):
         )
 
     async def a(self):
-        await self.key_press("a")
+        await self.key_press("a", duration=0.04)
 
     async def b(self):
-        await self.key_press("b")
+        await self.key_press("b", duration=0.04)
 
     async def up(self):
-        await self.key_press("i")
+        await self.key_press("i", duration=0.03)
 
     async def down(self):
-        await self.key_press("k")
+        await self.key_press("k", duration=0.03)
 
     async def left(self):
-        await self.key_press("j")
+        await self.key_press("j", duration=0.03)
 
     async def right(self):
-        await self.key_press("l")
+        await self.key_press("l", duration=0.03)
 
     async def select(self):
-        await self.key_press("q")
+        await self.key_press("q", duration=0.04)
 
     async def start(self):
-        await self.key_press("e")
+        await self.key_press("e", duration=0.04)
 
     async def lb(self):
-        await self.key_press("1")
+        await self.key_press("1", duration=0.04)
 
     async def rb(self):
-        await self.key_press("2")
+        await self.key_press("2", duration=0.04)
