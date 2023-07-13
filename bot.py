@@ -13,6 +13,7 @@ class GameBotController:
         self.__USER_SCOPE = [AuthScope.CHAT_READ, AuthScope.CHAT_EDIT]
         self.controller: GameControllerType = controller
         self.HELP_PING_TIMEOUT_SEC = 60*15
+        self.COMMAND_QUEUE:asyncio.Queue = asyncio.Queue()
 
     async def __on_ready(self, ready_event: EventData):
         await ready_event.chat.join_room(self.creds["channel"])
@@ -21,7 +22,7 @@ class GameBotController:
     async def __on_message(self, msg: ChatMessage):
         text = msg.text.lower().lstrip().rstrip()
         if text in self.controller.controls:
-            await self.controller.controls[text]()
+            await self.COMMAND_QUEUE.put(self.controller.controls[text])
 
     async def __register_events(self):
         self.chat.register_event(ChatEvent.READY, self.__on_ready)
@@ -54,8 +55,12 @@ class GameBotController:
                 s += f"{control} "
 
             while True:
-                await asyncio.sleep(self.HELP_PING_TIMEOUT_SEC)
-                await self.chat.send_message(self.creds["channel"], s)
+                try:
+                    task = await asyncio.wait_for(self.COMMAND_QUEUE.get(), timeout=60.0)
+                    await task()
+                except asyncio.TimeoutError:
+                    await self.chat.send_message(self.creds["channel"], s)
+
         except KeyboardInterrupt:
             pass
         finally:
